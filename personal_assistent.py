@@ -1,3 +1,21 @@
+"""
+Give commands using microphone and listen for responses.
+Different commands to say are for example:
+date
+time
+search in wikipedia 'what You want to search'
+send email
+search in chrome
+offline    (this closes program)
+
+**System (OS) commands:
+'restart' - to restart pc
+'logout' - to logout pc
+'shutdown' - to shutdown pc
+
+"""
+
+
 import pyttsx3
 import speech_recognition as sr
 import smtplib
@@ -109,7 +127,7 @@ if __name__ == "__main__":
             wb.get(chromepath).open_new_tab(search)
         elif ("logout" == query) or ("log out" == query):
             os.system("shutdown -l")
-        elif "shutdown" == query:
+        elif ("shutdown" == query) or ("shut down" == query):
             os.system("shutdown /s /t 1")
         elif "restart" == query:
             os.system("shutdown /r /t 1")
