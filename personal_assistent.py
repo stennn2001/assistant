@@ -1,12 +1,17 @@
 """
 Give commands using microphone and listen for responses.
 Different commands to say are for example:
-date
-time
-search in wikipedia 'what You want to search'
-send email
-search in chrome
-offline    (this closes program)
+"date"
+"time"
+"search in wikipedia 'what You want to search' "
+"send email"
+"search in chrome"
+"play songs"
+"remember that "  this creates file and saves your request
+"do you know anything"  assistant tells the things your wanted to be remembered
+"screenshot"
+"joke"
+"offline "   (this closes program)
 
 **System (OS) commands:
 'restart' - to restart pc
@@ -22,7 +27,9 @@ import smtplib
 import wikipedia
 import webbrowser as wb
 import datetime
+import pyautogui
 import random
+import pyjokes
 import speaks
 import os
 
@@ -87,6 +94,13 @@ def takeCommand():
         return ""
     return query
 
+def screenshot():
+    img = pyautogui.screenshot()
+    img.save("image.png")
+
+def jokes():
+    speak(pyjokes.get_joke())
+
 def send_email(to, content):
     server = smtplib.SMTP("smtp.gmail.com", 465)
     server.ehlo()
@@ -131,6 +145,29 @@ if __name__ == "__main__":
             os.system("shutdown /s /t 1")
         elif "restart" == query:
             os.system("shutdown /r /t 1")
+        elif "play songs" in query:
+            songs_dir = r"C:\Users\kasutaja\Music"
+            songs = os.listdir(songs_dir)
+            print(songs[:len(songs)-1])
+            speak(f"You have have total {len(songs)-1} song{'s' if len(songs)-1 > 1 else ''}")
+            os.startfile(os.path.join(songs_dir, songs[0]))
+        elif "remember that" in query:
+            speak("What should I remember?")
+            data = takeCommand()
+            speak("You said me to remember to" + data)
+            with open("remembered.txt", "a") as file:
+                file.write(data + "\n")
+        elif "do you know anything" in query:
+            with open("remembered.txt", "r") as file:
+                data = file.readlines()
+                speak(f"You said me to remember {len(data)} {'things' if len(data)>1 else 'thing'}")
+                for row in data:
+                    speak(f"{row.strip()}")
+        elif "screenshot" in query:
+            screenshot()
+            speak("Screenshot has been taken.")
+        elif "joke" in query:
+            jokes()
         elif "offline" in query:
             speak(random.choice(speaks.goodbyes))
             quit()
